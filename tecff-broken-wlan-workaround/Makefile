@@ -1,10 +1,12 @@
+# SPDX-FileCopyrightText: 2024 Freifunk Alsdorf, Florian Maurer (FFAC)
+# SPDX-License-Identifier: GPL-3.0-or-later
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tecff-broken-wlan-workaround
 PKG_VERSION:=4
 PKG_RELEASE:=0
 
-PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+PKG_LICENSE:=GPL-3.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -15,18 +17,4 @@ define Package/tecff-broken-wlan-workaround
   DEPENDS:=+gluon-core +gluon-state-check +micrond +tecff-general-workaround
 endef
 
-define Build/Prepare
-        mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Build/Configure
-endef
-
-define Build/Compile
-endef
-
-define Package/tecff-broken-wlan-workaround/install
-        $(CP) ./files/* $(1)/
-endef
-
-$(eval $(call BuildPackage,tecff-broken-wlan-workaround))
+$(eval $(call BuildPackageGluon,tecff-broken-wlan-workaround))

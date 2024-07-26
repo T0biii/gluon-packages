@@ -20,8 +20,7 @@ if [ ! -d /sys/class/ieee80211 ] || [ "$(ls -l /sys/class/ieee80211/ | wc -l)" -
 fi
 
 # don't do anything while an autoupdater process is running
-pgrep autoupdater >/dev/null
-if [ "$?" == "0" ]; then
+if [ -f '/tmp/autoupdate.lock' ] ; then
 	logger -s -t "$SCRIPTNAME" -p 5 "autoupdater is running, aborting."
 	exit
 fi
@@ -75,7 +74,7 @@ RESTARTINFOFILE="/tmp/wlan-last-restart-marker-file"
 WLANMESHCONNECTIONS=0
 for wlan_interface in $WLAN_INTERFACES; do
 	if expr "$wlan_interface" : "mesh[0-9]" >/dev/null; then
-		if [ "$(batctl o | egrep "$wlan_interface" | wc -l)" -gt 0 ]; then
+		if [ "$(batctl o | grep -cE "$wlan_interface")" -gt 0 ]; then
 			WLANMESHCONNECTIONS=1
 			$($DEBUG) && logger -s -t "$SCRIPTNAME" -p 5 "found wlan mesh partners."
 			if [ ! -f "$MESHFILE" ]; then
@@ -89,7 +88,7 @@ done
 
 # check if there are local wlan batman clients
 WLANFFCONNECTIONS=0
-WLANFFCONNECTIONCOUNT="$(batctl tl | grep W | wc -l)"
+WLANFFCONNECTIONCOUNT="$(batctl tl | grep -c W)"
 if [ "$WLANFFCONNECTIONCOUNT" -gt 0 ]; then
 	# note: this check doesn't know which radio the clients are on
 	WLANFFCONNECTIONS=1
@@ -105,7 +104,7 @@ WLANPRIVCONNECTIONS=0
 for wlan_interface in $WLAN_INTERFACES; do
 	if expr "$wlan_interface" : "wlan[0-9]" >/dev/null; then
 		iw dev $wlan_interface station dump 2>/dev/null | grep -q Station
-		if [ "$?" == "0" ]; then
+		if [ "$?" = "0" ]; then
 			WLANPRIVCONNECTIONS=1
 			$($DEBUG) && logger -s -t "$SCRIPTNAME" -p 5 "found private wlan clients."
 			if [ ! -f "$PRIVCLIENTFILE" ]; then

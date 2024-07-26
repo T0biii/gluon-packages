@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Felix Baumann (FFAC)
+# SPDX-FileCopyrightText: 2024 Felix Baumann, Florian Maurer (FFAC)
 # SPDX-License-Identifier: MIT
 include $(TOPDIR)/rules.mk
 
@@ -7,8 +7,6 @@ PKG_VERSION:=1
 PKG_RELEASE:=1
 
 PKG_LICENSE:=MIT
-
-PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
 include $(TOPDIR)/../package/gluon.mk
 
@@ -20,18 +18,4 @@ define Package/$(PKG_NAME)
   MAINTAINER:=Freifunk Aachen <kontakt@freifunk-aachen.de>
 endef
 
-define Build/Prepare
-  mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Build/Configure
-endef
-
-define Build/Compile
-endef
-
-define Package/$(PKG_NAME)/install
-  $(CP) ./files/* $(1)/
-endef
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackageGluon,$(PKG_NAME)))
