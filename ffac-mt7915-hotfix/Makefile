@@ -16,7 +16,7 @@ define Package/$(PKG_NAME)
   SECTION:=gluon
   CATEGORY:=Gluon
   TITLE:=reload mt7915-firmware twice a day
-  DEPENDS:=@(TARGET_mediatek_filogic||TARGET_ramips_mt7621) kmod-mt7915e +gluon-core +micrond
+  DEPENDS:=@(TARGET_mediatek_filogic||TARGET_ramips_mt7621||TARGET_mediatek_mt7622) kmod-mt7915e +gluon-core +micrond
   MAINTAINER:=Freifunk Aachen <kontakt@freifunk-aachen.de>
 endef
 
